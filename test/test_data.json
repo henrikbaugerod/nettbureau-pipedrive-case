@@ -1,0 +1,86 @@
+[
+    {
+        "organization": {
+            "name": "Ole Brumms Honningfabrikk"
+        },
+        "person": {
+            "name": "Ole Brumm",
+            "phone": "11111111",
+            "email": "ole.brumm@hundremeterskogen.no",
+            "housing_type": "Enebolig",
+            "property_size": 40,
+            "deal_type": "Alle strømavtaler er aktuelle",
+            "contact_type": "Privat"
+        }
+    },
+    {
+        "organization": {
+            "name": "Tigergutts Trening & Sprett"
+        },
+        "person": {
+            "name": "Tigergutt",
+            "phone": "22222222",
+            "email": "tigergutt@hundremeterskogen.no",
+            "housing_type": "Leilighet",
+            "property_size": 60,
+            "deal_type": "Fastpris",
+            "contact_type": "Privat"
+        }
+    },
+    {
+        "organization": {
+            "name": "Nasse Nøffs Planter & Blomster"
+        },
+        "person": {
+            "name": "Nasse Nøff",
+            "phone": "33333333",
+            "email": "nasse.noff@hundremeterskogen.no",
+            "housing_type": "Tomannsbolig",
+            "property_size": 50,
+            "deal_type": "Spotpris",
+            "contact_type": "Borettslag"
+        }
+    },
+    {
+        "organization": {
+            "name": "Tussi Consulting"
+        },
+        "person": {
+            "name": "Tussi",
+            "phone": "44444444",
+            "email": "tussi@hundremeterskogen.no",
+            "housing_type": "Rekkehus",
+            "property_size": 35,
+            "deal_type": "Kraftforvaltning",
+            "contact_type": "Privat"
+        }
+    },
+    {
+        "organization": {
+            "name": "Ugle Rådgivning"
+        },
+        "person": {
+            "name": "Ugle",
+            "phone": "55555555",
+            "email": "ugle@hundremeterskogen.no",
+            "housing_type": "Hytte",
+            "property_size": 70,
+            "deal_type": "Annen avtale/vet ikke",
+            "contact_type": "Bedrift"
+        }
+    },
+    {
+        "organization": {
+            "name": "Kengus Hopp og Hjelp AS"
+        },
+        "person": {
+            "name": "Kengu",
+            "phone": "66666666",
+            "email": "kengu@hundremeterskogen.no",
+            "housing_type": "Annet",
+            "property_size": 85,
+            "deal_type": "Alle strømavtaler er aktuelle",
+            "contact_type": "Bedrift"
+        }
+    }
+]
