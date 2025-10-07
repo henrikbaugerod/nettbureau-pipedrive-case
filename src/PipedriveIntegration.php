@@ -14,6 +14,11 @@ class PipedriveIntegration {
         $this->apiKey = $apiKey;
         $this->apiUrl = 'https://' . $domain . '.pipedrive.com/api/';
     }
+    
+    private function log(string $message) {
+        $time = date('Y-m-d H:i:s');
+        file_put_contents(__DIR__ . '/pipedrive_integration.log', "[$time] $message" . PHP_EOL, FILE_APPEND);
+    }
 
     private function apiCall(string $method, string $endpoint, array $data = [], int $version = 2) {
         $url =  $this->apiUrl . 'v' . $version . '/' . $endpoint;
@@ -43,6 +48,7 @@ class PipedriveIntegration {
         if ($response === false) {
             $error = curl_error($curl);
             curl_close($curl);
+            $this->log('cURL Error: ' . $error);
             throw new Exception("cURL Error: $error");
         }
         
@@ -53,28 +59,48 @@ class PipedriveIntegration {
 
         if ($status >= 400 || (isset($result['success']) && !$result['success'])) {
             $message = $result['error'] ?? "API returned status $status";
+            $this->log('API Error: ' . $message);
             throw new Exception("API Error: " . $message);
         }
         
         return $result;
     }
     
-    public function getOrganizations() {
-        $response = $this->apiCall('GET', 'organizations');
+    private function getOrganization(string $name) {
+        $response = $this->apiCall('GET', 'organizations/search?term=' . urlencode($name));
         return $response;
     }
     
     public function createOrganization(array $data) {
+        // Check for existing organization before creating new one
+        $existingOrg = $this->getOrganization($data['name']);
+        if(count($existingOrg['data']['items']) > 0) {
+            // Organization exists, return first item
+            $this->log('Organization already exists with name: ' . $data['name']);
+            return ['data' => $existingOrg['data']['items'][0]['item']];
+        }
+        
+        // Create new
         $response = $this->apiCall('POST', 'organizations', $data);
+        $this->log('Creating new organization with name: ' . $data['name']);
         return $response;
     }
     
-    public function getPersons() {
-        $response = $this->apiCall('GET', 'persons');
+    private function getPerson(string $name, int $orgId) {
+        $response = $this->apiCall('GET', 'persons/search?term=' . urlencode($name) . '&org_id=' . $orgId);
         return $response;
     }
     
     public function createPerson(array $data, int $orgId) {
+        // Check for existing person by name
+        $existingPerson = $this->getPerson($data['name'], $orgId);
+        if(count($existingPerson['data']['items']) > 0) {
+            // Person exists, return first item
+            $this->log('Person already exists with name: ' . $data['name'] . ' and org_id: ' . $orgId);
+            return ['data' => $existingPerson['data']['items'][0]['item']];
+        }
+        
+        // Create new person
         $payload = [
             'name' => $data['name'],
             'org_id' => $orgId,
@@ -96,6 +122,12 @@ class PipedriveIntegration {
         ];
         
         $response = $this->apiCall('POST', 'persons', $payload);
+        $this->log('Creating new person with name: ' . $data['name'] . ' and org_id: ' . $orgId);
+        return $response;
+    }
+    
+    private function getLead(string $name, int $personId, int $orgId) {
+        $response = $this->apiCall('GET', 'leads/search?term=' . urlencode($name) . '&person_id=' . $personId . '&organization_id=' . $orgId);
         return $response;
     }
     
@@ -111,7 +143,17 @@ class PipedriveIntegration {
             $this->getCustomFieldsKey('deal_type') => $this->getDealTypeId($data['deal_type'])
         ];
         
+        // Check if lead already exists
+        $existingLead = $this->getLead($payload['title'], $data['person_id'], $data['organization_id']);
+        if(count($existingLead['data']['items']) > 0) {
+            // Person exists, return first item
+            $this->log('Lead already exists with name: ' . $payload['title'] . ' and person_id: ' . $data['person_id'] . ' and org_id: ' . $data['organization_id']);
+            return ['data' => $existingLead['data']['items'][0]['item']];
+        }
+        
+        // Create new lead
         $response = $this->apiCall('POST', 'leads', $payload, 1);
+        $this->log('Creating new lead with name: ' . $data['name'] . ' and person_id: ' . $data['person_id'] . ' and org_id: ' . $data['organization_id']);
         return $response;
     }
     
