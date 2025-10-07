@@ -7,5 +7,8 @@ Jeg valgte å legge koden på nettsiden min som kjører en publiseringsløsning 
 ### Testdata
 JSON som jeg bruker som datagrunnlag finner du på https://www.henrikbaugerod.no/nettbureau/test_data.json.
 
+### Log
+Du finner loggen her: https://www.henrikbaugerod.no/nettbureau/pipedrive_integration.log
+
 ### Kjøring av program
 Bare åpne denne siden så kjøres skriptet automatisk med testdataen: https://www.henrikbaugerod.no/nettbureau-pipedrive-case. Resultatet blir printet i nettleseren.
